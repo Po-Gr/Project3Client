@@ -20,16 +20,11 @@ public class Client {
 //        registerSensor(sensorName);
 //        //регистрация сенсора
 //
-        add1000measurements(sensorName);
-        //добавление 1000 измерений
+//        add1000measurements(sensorName);
+//        //добавление 1000 измерений
 
-
-
-
-//        AllMeasurementsResponse response3 = restTemplate.getForObject(measurementsGetUrl, AllMeasurementsResponse.class);
-//        for (MeasurementDTO measurementDTO: response3.getAllMeasurements()) {
-//            System.out.println("Measurement value: " + measurementDTO.getValue() + ", Sensor name: " + measurementDTO.getSensor().getName());
-//        }
+        printAllMeasurements(getAllMeasurements());
+        //печатаем данные всехизмерений
     }
 
     private static void registerSensor(String sensorName) {
@@ -57,8 +52,18 @@ public class Client {
             HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(measurementAdd);
 
             String response = restTemplate.postForObject(measurementAddUrl, httpEntity, String.class);
-//
-//            System.out.println(response);
+        }
+    }
+
+    private static List<MeasurementDTO> getAllMeasurements() {
+        AllMeasurementsResponse response = restTemplate.getForObject(measurementsGetUrl, AllMeasurementsResponse.class);
+        return response.getAllMeasurements();
+    }
+
+    private static void printAllMeasurements(List<MeasurementDTO> allMeasurements) {
+        for (MeasurementDTO measurementDTO: allMeasurements) {
+            String isRaining = measurementDTO.getRaining() ? "no rain" : "rain";
+            System.out.println("Measurement value: " + measurementDTO.getValue() +  ", " + isRaining + ", Sensor name: " + measurementDTO.getSensor().getName());
         }
     }
 }
